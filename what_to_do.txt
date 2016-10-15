@@ -1,0 +1,12 @@
+general
+-------
+[x] configuration file
+
+commands
+--------
+[x] hello
+[ ] eight ball
+    [x] basic functionality
+    [x] pretty formatting
+    [ ] funny responses
+[ ] music
