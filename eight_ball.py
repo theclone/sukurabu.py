@@ -13,10 +13,14 @@ responses = [
     "not even in your lewdest fantasies",
     "have you thought about not asking that question",
     "yes",
+    "probably not",
     "no",
     "iunno",
     "who knows",
-    "mayhaps"
+    "mayhaps",
+    "the heart of cards say yes",
+    "how bout no",
+    "ERROR: TOO INSIGNIFICANT TO ANSWER",
     "maybe you should ask again",
     "all i knw is that my heart says maybe",
     "for sure"
