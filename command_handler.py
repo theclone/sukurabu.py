@@ -8,7 +8,7 @@ commands = {
 
 async def command_handler(message, client, logger):
     print("in command handler")
-    prefixed_command = message.content
+    prefixed_command = message.content.split()[0]
     command = prefixed_command[1:]  # take out prefix
 
     if command in commands:

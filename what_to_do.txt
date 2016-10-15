@@ -5,8 +5,8 @@ general
 commands
 --------
 [x] hello
-[ ] eight ball
+[x] eight ball
     [x] basic functionality
     [x] pretty formatting
-    [ ] funny responses
+    [x] funny responses
 [ ] music
