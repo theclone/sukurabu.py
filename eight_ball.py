@@ -10,10 +10,15 @@ responses = [
     "don't even think about it",
     "sure, why not",
     "if you believe hard enough",
+    "not even in your lewdest fantasies",
+    "have you thought about not asking that question",
     "yes",
     "no",
     "iunno",
     "who knows",
+    "mayhaps"
+    "maybe you should ask again",
+    "all i knw is that my heart says maybe",
     "for sure"
 ]
 
@@ -22,7 +27,9 @@ async def eight_ball(message, client, logger):
     question = message.content[7:]   # strip prefix and 'eight', including whitespace
     if question.strip() == "":
         return
-    msg = message.author.mention + ' `asks` ' + '__**' + question + '**__' \
-        + '\n:8ball: `responds` ' + '__**' + responses[random.randint(0, len(responses) - 1)] + '**__'
+    msg = message.author.mention + ' `asks` ' \
+        + '__**' + question + '**__' \
+        + '\n:8ball: `responds` ' + '__**' \
+        + responses[random.randint(0, len(responses) - 1)] + '**__'
     msg = msg.format(message)
     await client.send_message(message.channel, msg)

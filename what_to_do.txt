@@ -10,3 +10,9 @@ commands
     [x] pretty formatting
     [x] funny responses
 [ ] music
+    [ ] player
+    [ ] queue
+[ ] search
+[ ] "add" commands
+    [ ] custom reactions
+    [ ] big emotes
