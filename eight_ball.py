@@ -1,5 +1,5 @@
+from header import client, logger
 import random
-import logging
 
 responses = [
     "most definitely",
@@ -21,14 +21,15 @@ responses = [
     "the heart of cards say yes",
     "how bout no",
     "ERROR: TOO INSIGNIFICANT TO ANSWER",
+    "THERE IS AS YET INSUFFICIENT DATA FOR A MEANINGFUL ANSWER.",
     "maybe you should ask again",
     "all i knw is that my heart says maybe",
     "for sure"
 ]
 
-async def eight_ball(message, client, logger):
+async def eight_ball(message):
     logger.debug("eight")
-    question = message.content[7:]   # strip prefix and 'eight', including whitespace
+    question = message.content.strip()[1:]   # strip prefix and 'eight'
     if question.strip() == "":
         return
     msg = message.author.mention + ' `asks` ' \

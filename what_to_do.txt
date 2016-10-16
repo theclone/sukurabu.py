@@ -10,6 +10,7 @@ commands
     [x] pretty formatting
     [x] funny responses
 [ ] music
+    [ ] check if user is in voice channel
     [ ] player
     [ ] queue
 [ ] search

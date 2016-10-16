@@ -1,18 +1,5 @@
-import discord
-import logging
-import sys
-import configparser
+from header import client, logger, token, prefix
 from command_handler import command_handler
-
-logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
-
-config = configparser.ConfigParser()
-config.read('config.ini')
-token = config['init']['token']
-prefix = config['init']['prefix']
-
-client = discord.Client()
-logger = logging.getLogger('Discord')
 
 
 @client.event
