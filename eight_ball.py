@@ -29,7 +29,7 @@ responses = [
 
 async def eight_ball(message):
     logger.debug("eight")
-    question = message.content.strip()[1:]   # strip prefix and 'eight'
+    question = message.content.strip()[6:]   # strip prefix and 'eight'
     if question.strip() == "":
         return
     msg = message.author.mention + ' `asks` ' \

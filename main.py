@@ -8,9 +8,13 @@ async def on_message(message):
     if message.author == client.user:
         return
 
+    if message.author.name == '1Joetom[IRH]':
+        msg = 'shut up {0.author.mention}'.format(message)
+        await client.send_message(message.channel, msg)
+
     if message.content.startswith(prefix):
         logger.debug("command handler started")
-        await command_handler(message, client, logger)
+        await command_handler(message)
 
 
 @client.event
