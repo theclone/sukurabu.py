@@ -9,7 +9,7 @@ commands = {
     'music': music,
 }
 
-async def command_handler(message, client, logger):
+async def command_handler(message):
     prefixed_command = message.content.split()[0]
     command = prefixed_command[1:]  # take out prefix
 
