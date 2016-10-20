@@ -10,9 +10,11 @@ commands
     [x] pretty formatting
     [x] funny responses
 [ ] music
-    [ ] check if user is in voice channel
-    [ ] player
+    [x] check if user is in voice channel
     [ ] queue
+      [x] adding songs
+      [ ] listing queue (maybe a problem with adding?)
+    [ ] player
 [ ] search
 [ ] "add" commands
     [ ] custom reactions
