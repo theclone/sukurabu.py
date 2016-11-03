@@ -1,21 +1,34 @@
 from header import client, logger, youtube_key
 import aiohttp
 import asyncio
+import time
 
 
 class queue:
     song_list = []
     page_length = 10
+    current_player
+    is_playing = false
+    start_time
+    song_progress = 0
 
     async def play_queue(message):
         if voice is None:
             voice = client.join_voice_channel(message.user)
-        player_loop = asyncio.get_event_loop()
-        player_loop.run_until_complete(queue_loop)
-        player_loop.close()
+        current_player = await voice.create_ytdl_player(song_list[0].url)
+        current_player.start()
+        start_time = time.time()
+        is_playing = true
 
-    async def queue_loop(loop):
-        player = await voice.create_ytdl_player(song_list[0].url)
+    @classmethod
+    async def resume_queue(message):
+        current_player.resume()
+        start_time = time.time()
+
+    @classmethod
+    async def pause_queue(message):
+        current_player.pause()
+        song_progress += time.time() - start_time
 
     @classmethod
     async def add(self, song):
@@ -23,7 +36,7 @@ class queue:
         return song.title + ' queued by ' + song.dj.name
 
     @classmethod
-    async def remove(self, position):
+    async def remove(self, message, position):
         self.song_list.remove(position)
 
     @classmethod
@@ -64,7 +77,6 @@ class song:
         if self.dj.voice.voice_channel is None:
             msg = 'you are not not in a voice channel.'.format(message)
             await client.send_message(message.channel, msg)
-            return False
         else:
             self.voice_channel = self.dj.voice.voice_channel
 
@@ -100,8 +112,6 @@ async def music(message):
 
     if action == "add":
         new_song = await song.create(message)
-        if not new_song:
-            return False
         msg = (await song_queue.add(new_song)).format(message)
         await client.send_message(message.channel, msg)
 
