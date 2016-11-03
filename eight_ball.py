@@ -23,8 +23,14 @@ responses = [
     "ERROR: TOO INSIGNIFICANT TO ANSWER",
     "THERE IS AS YET INSUFFICIENT DATA FOR A MEANINGFUL ANSWER.",
     "maybe you should ask again",
-    "all i knw is that my heart says maybe",
-    "for sure"
+    "all i know is that my heart says maybe",
+    "for sure",
+    "42",
+    "i'd do it",
+    "do it, you won't",
+    "why not",
+    "only one way to find out",
+    "don't ask a bot for this"
 ]
 
 async def eight_ball(message):
