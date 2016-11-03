@@ -64,6 +64,7 @@ class song:
         if self.dj.voice.voice_channel is None:
             msg = 'you are not not in a voice channel.'.format(message)
             await client.send_message(message.channel, msg)
+            return False
         else:
             self.voice_channel = self.dj.voice.voice_channel
 
@@ -99,6 +100,8 @@ async def music(message):
 
     if action == "add":
         new_song = await song.create(message)
+        if not new_song:
+            return False
         msg = (await song_queue.add(new_song)).format(message)
         await client.send_message(message.channel, msg)
 
