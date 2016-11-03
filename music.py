@@ -2,6 +2,7 @@ from header import client, logger, youtube_key
 import aiohttp
 import asyncio
 import time
+import threading
 
 
 class queue:
@@ -11,10 +12,13 @@ class queue:
     is_playing = false
     start_time
     song_progress = 0
+    queue_thread
 
     async def play_queue(message):
         if voice is None:
             voice = client.join_voice_channel(message.user)
+        if queue_thread is None:
+            queue_thread = threading.Thread
         current_player = await voice.create_ytdl_player(song_list[0].url)
         current_player.start()
         start_time = time.time()
@@ -42,13 +46,14 @@ class queue:
     @classmethod
     async def get_playing(self, message):
         if len(self.song_list) == 0:
-            message = format('nothing is playing. to queue a new song, \
+            msg = format('nothing is playing. to queue a new song, \
                 type +music add \'url\'')
-            await client.send_message(message.channel, message)
-        return 'Now Playing:' + self.song_list[0].title \
+            await client.send_message(message.channel, msg)
+        msg = 'Now Playing:' + self.song_list[0].title \
             + ' (' + self.song_list[0].url + ') from ' \
             + self.song_list[0].service + ' queued by ' + \
             self.song_list[0].dj.name
+        await client.send_message(channel, msg.format(message))
 
     @classmethod
     async def list_songs(self, message, page):
