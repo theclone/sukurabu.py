@@ -8,11 +8,11 @@ import threading
 class queue:
     song_list = []
     page_length = 10
-    current_player
-    is_playing = false
-    start_time
+    is_playing = False
     song_progress = 0
-    queue_thread
+    # current_player
+    # start_time
+    # queue_thread
 
     async def play_queue(message):
         if voice is None:
@@ -22,7 +22,7 @@ class queue:
         current_player = await voice.create_ytdl_player(song_list[0].url)
         current_player.start()
         start_time = time.time()
-        is_playing = true
+        is_playing = True
 
     @classmethod
     async def resume_queue(message):
@@ -75,20 +75,21 @@ class queue:
 
 
 class song:
-    @classmethod  # can't use __init__ because of async
-    async def create(self, message):
-        self.dj = message.author
+    def __init__(self, message):
+        self.message = message
+    async def init(self):
+        self.dj = self.message.author
         # make sure the dj is in a voice channel
         if self.dj.voice.voice_channel is None:
-            msg = 'you are not not in a voice channel.'.format(message)
-            await client.send_message(message.channel, msg)
+            msg = 'you are not not in a voice channel.'.format(self.message)
+            await client.send_message(self.message.channel, msg)
         else:
             self.voice_channel = self.dj.voice.voice_channel
 
         # search for the song now
         base = 'https://www.googleapis.com/youtube/v3/search'
         parameters = {
-            'q': message.content.split()[2:],
+            'q': self.message.content.split()[2:],
             'type': 'video',
             'key': youtube_key,
             'part': 'snippet',
@@ -116,7 +117,8 @@ async def music(message):
     action = message.content.split()[1].strip()
 
     if action == "add":
-        new_song = await song.create(message)
+        new_song = song(message)
+        await new_song.init()
         msg = (await song_queue.add(new_song)).format(message)
         await client.send_message(message.channel, msg)
 
