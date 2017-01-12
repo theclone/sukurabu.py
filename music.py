@@ -15,28 +15,46 @@ class queue:
     voice = None
 
     @classmethod
-    async def play_queue(self, message):
+    async def toggle_queue(self, message):
+        # join voice channel
         if self.voice is None:
             self.voice = await client.join_voice_channel(message.author.voice.voice_channel)
+        # create player if it doesn't exist
         if self.current_player is None:
-            self.current_player = await self.voice.create_ytdl_player(self.song_list[0].url)
-        self.current_player.start()
-        self.start_time = time.time()
-        self.is_playing = True
+            self.current_player = await self.voice.create_ytdl_player(self.song_list[0].url, after=lambda: self.song_done(message))
+            print("NOT PLAYING YET")
+            self.current_player.start()
+            print("PLAYING NOW")
+            self.start_time = time.time()
+            self.is_playing = True
+            return "playing " + self.song_list[0].title
+        else:
+            # is playing
+            if self.current_player.is_playing():
+                self.current_player.pause()
+                return "pausing " + self.song_list[0].title
+            # is not playing
+            if not self.current_player.is_playing():
+                self.current_player.resume()
+                return "playing " + self.song_list[0].title
 
     @classmethod
-    async def resume_queue(self, message):
-        self.current_player.resume()
-        self.start_time = time.time()
+    async def song_done(self, message):
+        print("I HOPE I WORK!!!!!")
+        self.current_player.stop()
+        self.song_list.pop[0]
+
+        if len(self.song_list) != 0:
+            self.toggle_queue(message)
+        else:
+            await client.send_message(message.channel, format("end of queue"))
 
     @classmethod
-    async def pause_queue(self, message):
-        self.current_player.pause()
-        self.song_progress += time.time() - self.start_time
-
-    @classmethod
-    async def add(self, song):
+    async def add(self, song, message):
         self.song_list.append(song)
+        # TODO: properly handle through configuration
+        if self.voice is not None:
+            self.toggle_queue(message)
         return song.title + ' queued by ' + song.dj.name
 
     @classmethod
@@ -119,7 +137,7 @@ async def music(message):
     if action == "add":
         new_song = song(message)
         await new_song.init()
-        msg = (await song_queue.add(new_song)).format(message)
+        msg = (await song_queue.add(new_song, message)).format(message)
         await client.send_message(message.channel, msg)
 
     elif action == "list":
@@ -129,8 +147,8 @@ async def music(message):
         msg = (await song_queue.get_playing(message)).format(message)
         await client.send_message(message.channel, msg)
 
-    if action == "play":
-        msg = (await song_queue.play_queue(message)).format(message)
+    if action in ["toggle", "pause", "play"]:
+        msg = (await song_queue.toggle_queue(message)).format(message)
         await client.send_message(message.channel, msg)
 
     elif action == "remove":

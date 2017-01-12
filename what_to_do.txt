@@ -13,7 +13,7 @@ commands
     [x] check if user is in voice channel
     [ ] queue
       [x] adding songs
-      [ ] listing queue (maybe a problem with adding?)
+      [x] listing queue (maybe a problem with adding?)
     [ ] player
 [ ] search
 [ ] "add" commands
