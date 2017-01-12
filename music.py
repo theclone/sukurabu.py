@@ -10,29 +10,29 @@ class queue:
     page_length = 10
     is_playing = False
     song_progress = 0
-    # current_player
-    # start_time
-    # queue_thread
-
-    async def play_queue(message):
-        if voice is None:
-            voice = client.join_voice_channel(message.user)
-        if queue_thread is None:
-            queue_thread = threading.Thread
-        current_player = await voice.create_ytdl_player(song_list[0].url)
-        current_player.start()
-        start_time = time.time()
-        is_playing = True
+    current_player = None
+    start_time = None
+    voice = None
 
     @classmethod
-    async def resume_queue(message):
-        current_player.resume()
-        start_time = time.time()
+    async def play_queue(self, message):
+        if self.voice is None:
+            self.voice = await client.join_voice_channel(message.author.voice.voice_channel)
+        if self.current_player is None:
+            self.current_player = await self.voice.create_ytdl_player(self.song_list[0].url)
+        self.current_player.start()
+        self.start_time = time.time()
+        self.is_playing = True
 
     @classmethod
-    async def pause_queue(message):
-        current_player.pause()
-        song_progress += time.time() - start_time
+    async def resume_queue(self, message):
+        self.current_player.resume()
+        self.start_time = time.time()
+
+    @classmethod
+    async def pause_queue(self, message):
+        self.current_player.pause()
+        self.song_progress += time.time() - self.start_time
 
     @classmethod
     async def add(self, song):
