@@ -2,5 +2,6 @@ from header import client, logger
 
 async def hello(message):
     logger.debug("saying hello")
+    chan = message.channel
     msg = 'hey der big guy {0.author.mention}'.format(message)
-    await client.send_message(message.channel, msg)
+    await chan.send(msg)

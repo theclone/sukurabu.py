@@ -3,6 +3,7 @@ import aiohttp
 import asyncio
 import time
 
+chan = None
 
 class queue:
     song_list = []
@@ -17,13 +18,12 @@ class queue:
     async def async_song_done(self):
         title = self.song_list.pop(0).title
         self.current_player = None
-        await client.send_message(self.message.channel, title + " is done!")
+        await chan.send(title + " is done!")
 
         if len(self.song_list) != 0:
             await self.toggle_queue(self.message)
         else:
-            await client.send_message(self.message.channel,
-                                      "the end of the road")
+            await chan.send("the end of the road")
 
     @classmethod
     def song_done(self):
@@ -38,8 +38,8 @@ class queue:
     async def toggle_queue(self, message):
         # join voice channel
         if self.voice is None:
-            self.vchannel = message.author.voice.voice_channel
-            self.voice = await client.join_voice_channel(self.vchannel)
+            self.vchannel = message.author.voice.channel
+            self.voice    = self.vchannel.connect()
         # create player if it doesn't exist
         if self.current_player is None:
             self.message = message
@@ -48,27 +48,23 @@ class queue:
             self.current_player.start()
             self.start_time = time.time()
             self.is_playing = True
-            await client.send_message(self.message.channel, "playing " +
-                                      self.song_list[0].title)
+            await chan.send("playing " + self.song_list[0].title)
         else:
             # is playing
             if self.current_player.is_playing():
                 self.current_player.pause()
-                await client.send_message(self.message.channel, "pausing "
-                                          + self.song_list[0].title)
+                await chan.send("pausing " + self.song_list[0].title)
             # is not playing
             if not self.current_player.is_playing():
                 self.current_player.resume()
-                await client.send_message(self.message.channel, "resuming "
-                                          + self.song_list[0].title)
+                await chan.send("resuming " + self.song_list[0].title)
 
     @classmethod
     async def next(self, message):
         if self.current_player is not None:
             self.current_player.stop()
         else:
-            await client.send_message(message.channel,
-                                      "there's nothing to skip")
+            await message.channel.send("there's nothing to skip")
 
     @classmethod
     async def add(self, song, message):
@@ -86,20 +82,19 @@ class queue:
         if len(self.song_list) == 0:
             msg = 'nothing is playing. to queue a new song, \
                     type +music add \'url\''
-            await client.send_message(message.channel, msg)
+            await message.channel.send(msg)
         msg = 'Now Playing:' + self.song_list[0].title + ' (' + \
               self.song_list[0].url + ') from ' +               \
               self.song_list[0].service + ' queued by ' +       \
               self.song_list[0].dj.name
-        await client.send_message(message.channel, msg)
+        await message.channel.send(msg)
 
     @classmethod
     async def list_songs(self, message, page):
-        channel = message.channel
         if len(self.song_list) == 0:
             msg = 'you need to queue some songs first you dummy! ' +\
                     'to queue a new song, type +music add \'url\''
-            await client.send_message(channel, msg.format(message))
+            await chan.send(msg.format(message))
 
         song_msgs = []
         for i in range(0, len(self.song_list)):
@@ -109,7 +104,7 @@ class queue:
             print(song_msg)
             song_msgs.append(song_msg)
         songs_out = '\n'.join(song_msgs).format(message)
-        await client.send_message(channel, songs_out)
+        await chan.send(songs_out)
 
 
 class song:
@@ -121,7 +116,7 @@ class song:
         # make sure the dj is in a voice channel
         if self.dj.voice.voice_channel is None:
             msg = 'you are not not in a voice channel.'.format(self.message)
-            await client.send_message(self.message.channel, msg)
+            await chan.send(msg)
         else:
             self.voice_channel = self.dj.voice.voice_channel
 
@@ -158,14 +153,17 @@ song_queue = queue()
 async def music(message):
     action = message.content.split()[1].strip()
 
+    global chan
+    chan = message.channel
+
     if action == "add":
         new_song = song(message)
         await new_song.init()
         msg = (await song_queue.add(new_song, message)).format(message)
-        await client.send_message(message.channel, msg)
+        await chan.send(msg)
 
     elif action == "list":
-        await client.send_message(message.channel, msg)
+        await chan.send(msg)
 
     elif action == "next":
         await song_queue.next(message)
@@ -179,7 +177,7 @@ async def music(message):
     elif action == "remove":
         logger.debug(action + " is not implemented yet")
         msg = (action + ' is not implemented yet').format(message)
-        await client.send_message(message.channel, msg)
+        await chan.send(msg)
 
     else:
         logger.debug("no such command")

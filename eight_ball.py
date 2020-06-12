@@ -38,9 +38,10 @@ async def eight_ball(message):
     question = message.content.strip()[6:]   # strip prefix and 'eight'
     if question.strip() == "":
         return
+    chan = message.channel
     msg = message.author.mention + ' `asks` ' \
         + '__**' + question + '**__' \
         + '\n:8ball: `responds` ' + '__**' \
         + responses[random.randint(0, len(responses) - 1)] + '**__'
     msg = msg.format(message)
-    await client.send_message(message.channel, msg)
+    await chan.send(msg)
