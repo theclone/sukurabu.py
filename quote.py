@@ -21,14 +21,14 @@ async def quotation(message):
     sample = gpt2.generate(sess, prefix=prompt, length=100, temperature=1.0, return_as_list=True)
     logger.debug(sample[0])
     match = sample[0].split('\n\n')
-    match = list(filter(None, match))
+    match = [i for i in match if i.strip()] 
     if len(match) > 1:
         msg = match[random.randrange(0, len(match))]
         msg = message.author.mention + "\n" + msg
         msg = msg.format(message)
     else:
         msg = "nothin sorry"
-    await chan.send(msg)
+    await message.reply(msg)
 
 async def quotation_batch(message):
     global sess
@@ -41,11 +41,11 @@ async def quotation_batch(message):
     sample = gpt2.generate(sess, prefix=prompt, length=100, temperature=1.0, return_as_list=True)
     logger.debug(sample[0])
     match = sample[0].split('\n\n')
-    match = list(filter(None, match))
+    match = [i for i in match if i.strip()]
     if len(match) > 1:
         msg = '\n'.join(match)
         msg = message.author.mention + "\n" + msg
         msg = msg.format(message)
     else:
         msg = "nothin sorry"
-    await chan.send(msg)
+    await message.reply(msg)
