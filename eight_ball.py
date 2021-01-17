@@ -1,5 +1,7 @@
-from header import client, logger
 import random
+
+from header import logger
+from owo import should_owo, owoify
 
 responses = [
     "most definitely",
@@ -38,10 +40,12 @@ async def eight_ball(message):
     question = message.content.strip()[6:]   # strip prefix and 'eight'
     if question.strip() == "":
         return
-    chan = message.channel
+    resp = responses[random.randint(0, len(responses) - 1)]
+    if should_owo():
+        resp = owoify(resp)
     msg = message.author.mention + ' `asks` ' \
         + '__**' + question + '**__' \
         + '\n:8ball: `responds` ' + '__**' \
-        + responses[random.randint(0, len(responses) - 1)] + '**__'
+        + resp + '**__'
     msg = msg.format(message)
-    await chan.send(msg)
+    await message.reply(msg)

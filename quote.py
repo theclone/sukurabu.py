@@ -1,3 +1,4 @@
+from discord_op import reply
 from header import client, logger
 import gpt_2_simple as gpt2
 import regex
@@ -28,7 +29,7 @@ async def quotation(message):
         msg = msg.format(message)
     else:
         msg = "nothin sorry"
-    await message.reply(msg)
+    await reply(message, msg)
 
 async def quotation_batch(message):
     global sess
@@ -48,4 +49,4 @@ async def quotation_batch(message):
         msg = msg.format(message)
     else:
         msg = "nothin sorry"
-    await message.reply(msg)
+    await reply(message, msg)
