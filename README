@@ -2,13 +2,9 @@ Prerequisites
 -------------
 Python 3.7! TF 1.x is broken on 3.8 and above and 3.5 and below.
 
-python3 -m pip install --user discord.py
-python3 -m pip install --user gpt-2-simple
-python3 -m pip install --user tensorflow=1.15
+python -m pip install -r requirements.txt
 
-Getting pre-release discord.py for reply support
-------------------------------------------------
-git clone https://github.com/Rapptz/discord.py
-cd discord.py
-windows - py -3.7 -m pip install .
-linux   - python3.7 -m pip install .
+Using quote feature
+-------------------
+Place the `checkpoints` directory into the current folder.
+The code will pick up the latest checkpoint from there.
