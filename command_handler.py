@@ -7,6 +7,7 @@ from quote import quotation, quotation_batch
 
 commands = {
     'eight': eight_ball,
+    '8'    : eight_ball,
     'hello': hello,
     'music': music,
     'owo' : owotoggle,

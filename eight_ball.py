@@ -37,7 +37,13 @@ responses = [
 
 async def eight_ball(message):
     logger.debug("eight")
-    question = message.content.strip()[6:]   # strip prefix and 'eight'
+    # Strip prefix + command
+    questionarr = message.content.split()
+    if len(questionarr) == 1:
+        await message.reply('Hey! Give me something to predict.')
+        return
+    question = ' '.join(questionarr[1:])
+
     if question.strip() == "":
         return
     resp = responses[random.randint(0, len(responses) - 1)]
