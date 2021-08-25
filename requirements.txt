@@ -1,4 +1,4 @@
 discord.py
 gpt-2-simple
-tensorflow==1.15
+tensorflow==2.5.1
 owoify
